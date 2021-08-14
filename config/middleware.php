@@ -1,5 +1,6 @@
 <?php
 
+use Selective\BasePath\BasePathMiddleware;
 use Slim\App;
 use Slim\Middleware\ErrorMiddleware;
 
