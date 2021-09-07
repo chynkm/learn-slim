@@ -1,25 +1,37 @@
 <?php
 
-use DI\ContainerBuilder;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
+use Slim\Factory\AppFactory;
+use Slim\Middleware\ErrorMiddleware;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+return [
+    'settings' => function () {
+        return require __DIR__ . '/settings.php';
+    },
 
-$containerBuilder = new ContainerBuilder();
+    App::class => function (ContainerInterface $container) {
+        AppFactory::setContainer($container);
 
-// Set up settings
-$containerBuilder->addDefinitions(__DIR__ . '/container.php');
+        return AppFactory::create();
+    },
 
-// Build PHP-DI Container instance
-$container = $containerBuilder->build();
+    ResponseFactoryInterface::class => function (ContainerInterface $container) {
+        return $container->get(App::class)->getResponseFactory();
+    },
 
-// Create App instance
-$app = $container->get(App::class);
+    ErrorMiddleware::class => function (ContainerInterface $container) {
+        $app = $container->get(App::class);
+        $settings = $container->get('settings')['error'];
 
-// Register routes
-(require __DIR__ . '/routes.php')($app);
+        return new ErrorMiddleware(
+            $app->getCallableResolver(),
+            $app->getResponseFactory(),
+            (bool)$settings['display_error_details'],
+            (bool)$settings['log_errors'],
+            (bool)$settings['log_error_details']
+        );
+    },
 
-// Register middleware
-(require __DIR__ . '/middleware.php')($app);
-
-return $app;
+];
