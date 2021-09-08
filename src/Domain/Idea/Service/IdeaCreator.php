@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\User\Service;
+namespace App\Domain\Idea\Service;
 
-use App\Domain\User\Repository\IdeaCreatorRepository;
+use App\Domain\Idea\Repository\IdeaCreatorRepository;
 use App\Exception\ValidationException;
 
 final class IdeaCreator

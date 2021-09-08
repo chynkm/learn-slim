@@ -2,7 +2,7 @@
 
 namespace App\Action;
 
-use App\Domain\User\Service\IdeaCreator;
+use App\Domain\Idea\Service\IdeaCreator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
