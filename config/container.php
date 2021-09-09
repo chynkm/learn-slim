@@ -1,5 +1,7 @@
 <?php
 
+use App\Domain\Idea\Database\MySQLIdeaRepository;
+use App\Domain\Idea\IdeaRepository;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\App;
@@ -28,9 +30,9 @@ return [
         return new ErrorMiddleware(
             $app->getCallableResolver(),
             $app->getResponseFactory(),
-            (bool)$settings['display_error_details'],
-            (bool)$settings['log_errors'],
-            (bool)$settings['log_error_details']
+            (bool) $settings['display_error_details'],
+            (bool) $settings['log_errors'],
+            (bool) $settings['log_error_details']
         );
     },
 
@@ -46,6 +48,14 @@ return [
         $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 
         return new PDO($dsn, $username, $password, $flags);
+    },
+
+    Redis::class => function (ContainerInterface $container) {
+        return (new Redis())->connect('127.0.0.1', 6379);
+    },
+
+    IdeaRepository::class => function (ContainerInterface $container) {
+        return $container->get(MySQLIdeaRepository::class);
     },
 
 ];

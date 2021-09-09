@@ -33,6 +33,7 @@ final class UserCreator
      * @return int The new user ID
      */
     public function createUser(array $data): int
+    // public function createUser(string $username,string $email): int
     {
         // Input validation
         $this->validateNewUser($data);

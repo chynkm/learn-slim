@@ -2,14 +2,14 @@
 
 namespace App\Domain\Idea\Service;
 
-use App\Domain\Idea\Repository\IdeaCreatorRepository;
+use App\Domain\Idea\IdeaRepository;
 use App\Exception\ValidationException;
 
 final class IdeaCreator
 {
     private $repository;
 
-    public function __construct(IdeaCreatorRepository $repository)
+    public function __construct(IdeaRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -20,7 +20,7 @@ final class IdeaCreator
         $this->validateNewIdea($data);
 
         // Insert user
-        $ideaId = $this->repository->insertIdea($data);
+        $ideaId = $this->repository->save($data);
 
         return $ideaId;
     }
